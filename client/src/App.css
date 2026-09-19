@@ -348,3 +348,50 @@ border-radius:8px;
 .profile-info strong{
 color:#2563eb;
 }
+.edit-btn{
+background:#2563eb;
+border:none;
+color:#fff;
+padding:10px;
+border-radius:8px;
+cursor:pointer;
+transition:.3s;
+}
+
+.edit-btn:hover{
+background:#1d4ed8;
+}
+
+.income-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.income-actions{
+display:flex;
+gap:10px;
+}
+.card-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+  width: 35px;
+  height: 35px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background: #2563eb;
+  color: white;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+}

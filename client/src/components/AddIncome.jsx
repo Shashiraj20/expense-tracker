@@ -1,14 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../services/api";
 import toast from "react-hot-toast";
 
-function AddIncome({ close, getIncome }) {
+function AddIncome({ close, getIncome, editIncome }) {
   const [form, setForm] = useState({
     title: "",
     amount: "",
     category: "",
     date: "",
   });
+
+  useEffect(() => {
+    if (editIncome) {
+      setForm({
+        title: editIncome.title,
+        amount: editIncome.amount,
+        category: editIncome.category,
+        date: editIncome.date
+          ? editIncome.date.substring(0, 10)
+          : "",
+      });
+    }
+  }, [editIncome]);
 
   const handleChange = (e) => {
     setForm({
@@ -21,16 +34,25 @@ function AddIncome({ close, getIncome }) {
     e.preventDefault();
 
     try {
-      await API.post("/income", form);
+      if (editIncome) {
+        await API.put(`/income/${editIncome._id}`, form);
 
-      toast.success("Income Added Successfully");
+        toast.success("Income Updated Successfully");
+      } else {
+        await API.post("/income", form);
+
+        toast.success("Income Added Successfully");
+      }
 
       getIncome();
 
       close();
     } catch (error) {
       toast.error(
-        error.response?.data?.message || "Failed to Add Income"
+        error.response?.data?.message ||
+          (editIncome
+            ? "Failed to Update Income"
+            : "Failed to Add Income")
       );
     }
   };
@@ -38,7 +60,7 @@ function AddIncome({ close, getIncome }) {
   return (
     <div className="modal">
       <form className="modal-box" onSubmit={handleSubmit}>
-        <h2>Add Income</h2>
+        <h2>{editIncome ? "Edit Income" : "Add Income"}</h2>
 
         <input
           type="text"
@@ -76,7 +98,9 @@ function AddIncome({ close, getIncome }) {
         />
 
         <div className="modal-btns">
-          <button type="submit">Save</button>
+          <button type="submit">
+            {editIncome ? "Update" : "Save"}
+          </button>
 
           <button type="button" onClick={close}>
             Cancel

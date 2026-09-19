@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 function Expense() {
   const [expense, setExpense] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [editExpense, setEditExpense] = useState(null);
 
   useEffect(() => {
     getExpense();
@@ -34,6 +35,11 @@ function Expense() {
     }
   };
 
+  const handleEdit = (item) => {
+    setEditExpense(item);
+    setShowModal(true);
+  };
+
   return (
     <div className="layout">
       <Sidebar />
@@ -46,7 +52,10 @@ function Expense() {
         <div className="page-top">
           <button
             className="add-btn"
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              setEditExpense(null);
+              setShowModal(true);
+            }}
           >
             + Add Expense
           </button>
@@ -56,6 +65,7 @@ function Expense() {
           <AddExpense
             getExpense={getExpense}
             close={() => setShowModal(false)}
+            editExpense={editExpense}
           />
         )}
 
@@ -65,6 +75,7 @@ function Expense() {
               key={item._id}
               expense={item}
               onDelete={deleteExpense}
+              onEdit={handleEdit}
             />
           ))}
         </div>

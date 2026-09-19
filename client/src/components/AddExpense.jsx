@@ -1,14 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../services/api";
 import toast from "react-hot-toast";
 
-function AddExpense({ close, getExpense }) {
+function AddExpense({ close, getExpense, editExpense }) {
   const [form, setForm] = useState({
     title: "",
     amount: "",
     category: "",
     date: "",
   });
+
+  useEffect(() => {
+    if (editExpense) {
+      setForm({
+        title: editExpense.title,
+        amount: editExpense.amount,
+        category: editExpense.category,
+        date: editExpense.date?.split("T")[0],
+      });
+    }
+  }, [editExpense]);
 
   const handleChange = (e) => {
     setForm({
@@ -21,22 +32,25 @@ function AddExpense({ close, getExpense }) {
     e.preventDefault();
 
     try {
-      await API.post("/expense", form);
-
-      toast.success("Expense Added");
+      if (editExpense) {
+        await API.put(`/expense/${editExpense._id}`, form);
+        toast.success("Expense Updated");
+      } else {
+        await API.post("/expense", form);
+        toast.success("Expense Added");
+      }
 
       getExpense();
-
       close();
     } catch (error) {
-      toast.error("Failed to Add Expense");
+      toast.error(editExpense ? "Update Failed" : "Failed to Add Expense");
     }
   };
 
   return (
     <div className="modal">
       <form className="modal-box" onSubmit={handleSubmit}>
-        <h2>Add Expense</h2>
+        <h2>{editExpense ? "Edit Expense" : "Add Expense"}</h2>
 
         <input
           type="text"
@@ -74,7 +88,9 @@ function AddExpense({ close, getExpense }) {
         />
 
         <div className="modal-btns">
-          <button type="submit">Save</button>
+          <button type="submit">
+            {editExpense ? "Update" : "Save"}
+          </button>
 
           <button type="button" onClick={close}>
             Cancel

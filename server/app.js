@@ -9,10 +9,13 @@ const incomeRoutes = require("./routes/incomeRoutes");
 const expenseRoutes = require("./routes/expenseRoutes");
 
 dotenv.config();
+console.log(process.env.MONGO_URI);
 
 connectDB();
 
 const app = express();
+//middleware
+app.use(express.json())
 
 app.use(cors());
 app.use(express.json());

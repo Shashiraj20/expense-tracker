@@ -5,8 +5,6 @@ import toast from "react-hot-toast";
 import API from "../services/api";
 import { AuthContext } from "../context/AuthContext";
 
-
-
 function Login() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
@@ -33,6 +31,12 @@ function Login() {
 
       toast.success("Login Successful");
 
+      // Form clear
+      setForm({
+        email: "",
+        password: "",
+      });
+
       navigate("/dashboard");
     } catch (error) {
       toast.error(
@@ -43,9 +47,11 @@ function Login() {
 
   return (
     <div className="auth-container">
-
-      <form className="auth-form" onSubmit={handleSubmit}>
-
+      <form
+        className="auth-form"
+        onSubmit={handleSubmit}
+        autoComplete="off"
+      >
         <h2>Expense Tracker</h2>
 
         <input
@@ -54,6 +60,7 @@ function Login() {
           name="email"
           value={form.email}
           onChange={handleChange}
+          autoComplete="off"
           required
         />
 
@@ -63,6 +70,7 @@ function Login() {
           name="password"
           value={form.password}
           onChange={handleChange}
+          autoComplete="new-password"
           required
         />
 
@@ -72,11 +80,9 @@ function Login() {
 
         <p>
           Don't have an account?
-          <Link to="/register"> Register</Link>
+          <Link to="/register">Register</Link>
         </p>
-
       </form>
-
     </div>
   );
 }

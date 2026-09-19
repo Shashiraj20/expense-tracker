@@ -11,6 +11,9 @@ function Income() {
   const [income, setIncome] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
+  // NEW
+  const [editIncome, setEditIncome] = useState(null);
+
   useEffect(() => {
     getIncome();
   }, []);
@@ -34,6 +37,12 @@ function Income() {
     }
   };
 
+  // NEW
+  const handleEdit = (item) => {
+    setEditIncome(item);
+    setShowModal(true);
+  };
+
   return (
     <div className="layout">
       <Sidebar />
@@ -44,35 +53,34 @@ function Income() {
         <Header title="Income" />
 
         <div className="page-top">
-
           <button
             className="add-btn"
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              setEditIncome(null);
+              setShowModal(true);
+            }}
           >
             + Add Income
           </button>
-
         </div>
 
         {showModal && (
           <AddIncome
             getIncome={getIncome}
             close={() => setShowModal(false)}
+            editIncome={editIncome}
           />
         )}
 
         <div className="card-grid">
-
           {income.map((item) => (
-
             <IncomeCard
               key={item._id}
               income={item}
               onDelete={deleteIncome}
+              onEdit={handleEdit}
             />
-
           ))}
-
         </div>
       </div>
     </div>
